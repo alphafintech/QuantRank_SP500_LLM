@@ -14,6 +14,10 @@ The project ranks equities based on fundamentals and trend momentum using struct
 
 ## 📁 Structure
 ```
+📁 Deep_research_reports/
+├── GPT-20250531.pdf
+└── Gemini-20250531.pdf
+
 📁 Gemini_Rankings/
 ├── screened_stocks.xlsx
 ├── sp500_fundamental_scores.xlsx
