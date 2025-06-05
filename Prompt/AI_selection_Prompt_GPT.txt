@@ -1,0 +1,188 @@
+
+A normalized composite trend-score algorithm has been developed  to rank S&P 500 constituents by the current strength and direction of their price trends. Trend Scoring Algorithm Overview：
+OBJECTIVE  
+Measure the short- to medium-term price momentum of every S&P 500 stock and output a 0-to-100 **Trend Score**.  The score blends ten technical signals that cover price structure, momentum, relative strength and volume confirmation, then ranks all tickers from strongest to weakest.
+
+I. CORE METRICS AND HOW EACH IS CALCULATED  
+
+Daily OHLCV data come from Yahoo Finance and are stored in SQLite; every metric below is refreshed each evening.
+
+1. **Moving-average structure** – checks whether the 10-, 20-, 50- and 150-day simple moving averages (SMAs) are in strict bullish order (10 > 20 > 50 > 150).  
+   • Score: 0 / 33 / 67 / 100 depending on how many of the three upward gaps are in place.
+
+2. **50-day SMA slope** – linear-regression slope of the 50-day SMA over the last 20 trading days, divided by the current 50-day SMA to express it as a unit-free percentage.  
+   • The result is mapped so a steep positive slope approaches 100 and a steep negative slope approaches 0.
+
+3. **ADX (14-day)** – Average Directional Index taken straight from price highs, lows and closes.  
+   • ADX of 15 or below scores 0; ADX 40 or above scores 100; linear in between.
+
+4. **Rate-of-Change (ROC)** – 20-day percentage change in the closing price.  
+   • 0 % is worth 50 points; +20 % maps to 100; –20 % maps to 0.
+
+5. **RSI (14-day)** – Relative Strength Index.  
+   • The closer RSI is to the neutral 50 line, the higher the score (peaks and troughs are penalised).
+
+6. **MACD histogram slope** – regression slope of the MACD histogram over the last 20 days, normalised by the histogram’s own standard deviation.
+
+7. **Relative strength versus the S&P 500** – excess return of the stock over SPY during the past 63 trading days.  
+   • +20 % excess return scores 100; –20 % scores 0.
+
+8. **OBV slope** – regression slope of On-Balance Volume over the last 20 days, again normalised by its standard deviation.
+
+9. **Distance to 52-week high** – percentage the latest close sits below the one-year high.  
+   • At the high (0 %) the score is 100; 20 % below the high scores 0.
+
+10. **Volume surge ratio** – 20-day average volume divided by the 120-day average.  
+    • The base-10 logarithm of the ratio is scaled so a clear pickup in turnover moves the score toward 100.
+
+II. SCORING AND RANKING PROCESS  
+
+1. **Data update**  
+   • Prices and volumes are pulled or back-filled only for dates missing in the database (incremental update).  
+   • Moving averages, MACD, RSI, Bollinger Bands, volume averages, Stochastic %K/%D and OBV are recomputed for every ticker.  
+   • Additional one-off series—ADX, 52-week high/low and 20-day ROC—are stored alongside daily data.
+
+2. **Raw-to-score mapping**  
+   • Each raw metric is transformed onto a 0-to-100 scale using the mapping rules listed under “Core Metrics”.  
+   • Outliers are clipped so all scores stay between 0 and 100.
+
+3. **Weighting**  
+   Default weights (editable in *config_trend.ini*; they normalise to 100):  
+   * Moving-average structure 15  
+   * 50-day SMA slope 10  
+   * ADX 15  
+   * ROC 10  
+   * RSI 5  
+   * MACD-histogram slope 10  
+   * Relative strength 10  
+   * OBV slope 10  
+   * Distance to 52-week high 10  
+   * Volume surge ratio 5  
+
+4. **Trend Score**  
+   • Multiply each metric score by its weight, sum the results and divide by 100.
+
+Concurrently, a normalized composite fundamental-growth score algorithm has been developed to rank S&P 500 constituents by their growth potential and quality.Fundamental Growth Scoring Algorithm Overview:
+OBJECTIVE  
+Evaluate every S&P 500 company on five dimensions—Growth, Quality, Efficiency, Safety, and Valuation—then combine them into a single Total Score (0-100) and a star rating.
+
+I. CORE METRICS AND HOW EACH IS CALCULATED  
+
+Growth metrics are measured two ways:  
+• “FY” looks at the last two annual reports and averages the year-over-year percentage changes.  
+• “Q-Seq” looks at the last four quarters and averages the quarter-over-quarter percentage changes.  
+If a value changes from zero or negative to positive, its growth rate is set at plus one hundred percent.
+
+A. GROWTH  
+1. Revenue growth – percentage change in total revenue.  
+2. EPS growth – percentage change in diluted EPS (if EPS is missing, use net income divided by shares outstanding).  
+3. Free-cash-flow growth – percentage change in free cash flow, where free cash flow equals operating cash flow minus capital expenditures.  
+4. Gross-margin change – change in gross profit as a proportion of revenue.  
+(The FY and Q-Seq scores for each of these four items are later blended 40 % FY, 60 % Q-Seq.)
+
+B. QUALITY  
+5. ROIC – operating income after an assumed 21 % tax charge divided by invested capital.  
+6. ROE – net income divided by shareholders’ equity.
+
+C. EFFICIENCY  
+7. Operating-cash-flow ratio – operating cash flow divided by revenue.  
+8. Asset-turnover ratio – revenue divided by total assets.
+
+D. SAFETY  
+9. Net debt to EBITDA – total debt minus cash, then divided by EBITDA.  
+10. Interest-coverage ratio – operating income divided by the absolute value of interest expense.  
+11. Current ratio – current assets divided by current liabilities.
+
+E. VALUATION  
+12. PEG – share price divided by forward EPS, then divided by the EPS growth rate (calculated only when EPS growth is positive).  
+13. Free-cash-flow yield – free cash flow divided by market capitalisation (share price times shares outstanding).
+
+II. SCORING AND RANKING PROCESS  
+
+1.  Download financial statements and prices, store them in SQLite, and compute the thirteen metrics above.
+
+2.  Handle gaps and outliers  
+    • Any missing figure is filled with the median figure for the same industry; if the industry has fewer than five companies, use the market-wide median instead.  
+    • Extreme values beyond the 5th and 95th percentiles are pulled back to those limits.
+
+3.  Convert raw numbers to 0-to-100 scores  
+    • Rank each metric within its industry and express the ranking as a percentile.  
+    • For “lower-is-better” items (Net debt / EBITDA and PEG) subtract the percentile from one hundred so that higher is always better.
+
+4.  Blend growth items  
+    • For each of the four growth items, blend its FY score and Q-Seq score using forty percent FY and sixty percent Q-Seq.
+
+5.  Build each pillar score  
+    • Growth score = 50 % revenue + 30 % EPS + 10 % free cash flow + 10 % gross margin (all using the blended values).  
+    • Quality, Efficiency, Safety, Valuation scores are simple averages of their own sub-metrics.
+
+6.  Total Score  
+    Total Score = 45 % Growth + 20 % Quality + 10 % Efficiency + 15 % Safety + 10 % Valuation.
+
+
+
+Applying these two screening algorithms, we have selected the following stocks, listed as "Ticker: (Trend Score, Fundamental Score, Final Score)":GE : (81.92, 57.875, 69.9), IDXX : (78.07, 60.10588235294117, 69.1), HWM : (77.34, 60.62777777777779, 69.0), NFLX : (76.54, 60.69035872753189, 68.6), APH : (80.66, 54.25995276696342, 67.5), MNST : (74.42, 59.44708936255899, 66.9), PAYC : (71.19, 58.70206965029963, 64.9), RL : (73.78, 55.84914685009505, 64.8), MSFT : (73.16, 55.86618161563655, 64.5), MA : (69.28, 59.35106992272176, 64.3), CTAS : (70.1, 58.32941404191395, 64.2), ULTA : (70.88, 57.19132090891988, 64.0), TT : (73.3, 54.58763121367149, 63.9), VRSK : (67.79, 56.29345963900711, 62.0), ADP : (68.64, 55.17230864363879, 61.9), RMD : (62.73, 61.00588235294117, 61.9), V : (66.87, 56.81677686079262, 61.8), UBER : (66.09, 56.65756622244161, 61.4), NEM : (62.26, 59.49505125078392, 60.9), COR : (66.41, 55.07322066529154, 60.7), PAYX : (62.91, 58.42386931196927, 60.7), ALLE : (68.84, 52.45609494561415, 60.6), ROL : (64.85, 53.78997351021179, 59.3), DASH : (63.33, 54.87040648421055, 59.1), FAST : (63.07, 54.48262633979843, 58.8). To better understand each stock's trend score and fundamental score, you can refer to the overview of how these two scores are calculated.
+
+My current portfolio includes the following holdings, displayed as "Ticker: (Cost Basis, Share Count, Latest price)": (MA:$570.00, 184, $585.60), (HWM:$168.85, 621, $169.89), (NVDA:$135.20, 1162, $135.13), (PAYC:$255.00, 403, $259.09), (UBER:$78.00, 826, $84.16), (NFLX:$1,078.00, 89, $1,207.23), (GE:$234.00, 447, $245.91), (APH:$82.00, 1186, $89.93), (MSFT:$455.00, 346, $460.36), (Cash: $30,390).
+
+
+Step 1 – Sentiment Analysis
+For each stock listed above—including both the screened selections and the current portfolio holdings—conduct a comprehensive search and analysis of all news articles and social media discussions (e.g., on X, formerly Twitter) published between 2025-05-17 and 2025-05-31.
+You can prioritize sentiment sources from official news outlets, X (formerly Twitter), earnings transcripts, and major financial news websites like Bloomberg, Reuters, CNBC, Wall street Journal and Seeking Alpha. You should focus on U.S.-based sentiment.
+	•	Evaluate sentiment (positive, negative, or neutral) and coverage volume for every ticker, accounting for industry-specific factors such as sector trends, regulatory changes, and supply-chain dynamics.
+	•	Integrate insights from the most recent earnings calls (up to 2025-05-31) to gauge management’s outlook on growth sustainability, revenue trajectories, and profitability, prioritizing stocks that exhibit consistent growth patterns and optimistic commentary suitable for a trend-based strategy.
+	•	Assign each stock a sentiment score from 0 to 10 (10 = strongest positive sentiment and engagement; 0 = strongest negative).
+	•	Provide a concise summary of sentiment trends for each stock, highlighting key events, recurring phrases, and the ways macroeconomic or industry factors shape perceptions.
+
+
+
+Step 2 – Macroeconomic and Market Context
+
+Analyze recent macroeconomic variables—including U.S. monetary policy (Federal Reserve’s interest rate decisions, forward guidance), inflation trends, GDP growth, tariffs, and other relevant economic policies—based on information published between 2025-05-17 and 2025-05-31. Prioritize official sources (e.g., Federal Reserve statements, Bureau of Economic Analysis reports, U.S. Treasury announcements) and major financial news websites (e.g., Bloomberg, Reuters, CNBC, WSJ).
+
+Examine contemporaneous trends in the S&P 500 and Nasdaq Composite indices within the same time frame. Clearly synthesize these findings into a concise summary outlining the current macroeconomic environment, market sentiment, and outlook, specifically highlighting how recent U.S. monetary policy and macroeconomic shifts could impact equity market conditions in the near term.
+
+
+
+Step 3 – Portfolio Adjustment and Rationale
+Based on the latest fundamental, sentiment, and technical analyses of both my existing holdings and the screened stock selections—together with the current macroeconomic climate and market conditions as of 2025-05-31—recommend adjustments to optimize my portfolio.
+Specifically:
+* To help you make a more informed decision, I’ve listed the most recent market prices for each stock in my current portfolio. The format is: ‘Ticker: (Cost Basis, Share Count, Latest Price),’ where the last value indicates the latest available market price.
+* Construct an optimized portfolio by selecting stocks exclusively from the combined set of my current holdings and the screened stocks.
+* The optimized portfolio should hold no more than 7 stocks, including cash if justified.
+* Ensure the total portfolio weights sum to exactly 100%.
+* Given the anticipated holding period of 30 days, select positions expected to deliver favorable returns within this timeframe.
+* When optimizing the portfolio, explicitly consider the current market prices, my original cost basis, and the predefined take-profit and stop-loss levels for each existing holding. Carefully evaluate whether the current market price is favorable before selling any stock. Similarly, thoroughly assess if the current market price presents a suitable buying opportunity when adding to existing positions or initiating new ones.
+
+
+For each recommended stock or cash allocation, provide:
+	1.	Rationale for selection. Clearly explain the reasoning behind choosing each stock or maintaining cash.
+	2.	Determine the investment allocation and provide the rationale。
+	3.	Define the exit strategy for the stock:
+First, identify the stock’s latest price. Then, based on the current entry price, set a stop-loss level by specifying a percentage below the entry price and calculate the exact stop-loss price.
+Also, set a take-profit level by specifying a percentage above the entry price and calculate the take-profit price.
+The exit strategy should be informed by recent price levels, key technical support/resistance zones, or the stock’s volatility.
+	4.	A concise justification summarizing strengths derived from:
+	•	(a) Fundamental factors (e.g., earnings growth, valuation metrics).
+	•	(b) Sentiment factors (e.g., investor perception, social-media buzz).
+	•	(c) Technical factors (e.g., momentum, key support/resistance levels).
+	5. Perform a technical analysis on this stock to determine whether the current price I’ve provided is a good buying opportunity. If it isn’t, suggest a price range that you believe would be more suitable for entry.
+
+
+step 4 - Present your recommended stock and cash positions separately using both table and text formats:
+- Table Format:
+Clearly indicate the allocation percentage for each recommended stock. Additionally, include explicitly defined stop-loss and take-profit strategies, both expressed as percentages relative to the entry price. These strategies should be informed by recent price volatility, as well as key technical support and resistance levels.
+
+
+- Text Format:
+Provide a concise and clear presentation of each recommendation in a single line, using the following structure:
+Ticker:Weight(e.g., AAPL:15%)
+This format specifies the position size as a percentage of total capital, along with the number of shares currently held or to be transacted.
+
+
+Requirements:
+
+You must fully complete all the specified analysis steps. Ensure that your investment recommendations align accurately with market dynamics and conditions as of `2025-05-31`, aiming to enhance overall portfolio performance.
+
+
+Finally, prepare your complete and structured analysis report in Chinese, ensuring it is logically organized, clearly articulated, and readily actionable for investment decision-making purposes.
