@@ -121,16 +121,16 @@ II. SCORING AND RANKING PROCESS
 
 
 
-Applying these two screening algorithms, we have selected the following stocks, listed as "Ticker: (Trend Score, Fundamental Score, Final Score)":GE : (81.92, 57.875, 69.9), IDXX : (78.07, 60.10588235294117, 69.1), HWM : (77.34, 60.62777777777779, 69.0), NFLX : (76.54, 60.69035872753189, 68.6), APH : (80.66, 54.25995276696342, 67.5), MNST : (74.42, 59.44708936255899, 66.9), PAYC : (71.19, 58.70206965029963, 64.9), RL : (73.78, 55.84914685009505, 64.8), MSFT : (73.16, 55.86618161563655, 64.5), MA : (69.28, 59.35106992272176, 64.3), CTAS : (70.1, 58.32941404191395, 64.2), ULTA : (70.88, 57.19132090891988, 64.0), TT : (73.3, 54.58763121367149, 63.9), VRSK : (67.79, 56.29345963900711, 62.0), ADP : (68.64, 55.17230864363879, 61.9), RMD : (62.73, 61.00588235294117, 61.9), V : (66.87, 56.81677686079262, 61.8), UBER : (66.09, 56.65756622244161, 61.4), NEM : (62.26, 59.49505125078392, 60.9), COR : (66.41, 55.07322066529154, 60.7), PAYX : (62.91, 58.42386931196927, 60.7), ALLE : (68.84, 52.45609494561415, 60.6), ROL : (64.85, 53.78997351021179, 59.3), DASH : (63.33, 54.87040648421055, 59.1), FAST : (63.07, 54.48262633979843, 58.8). To better understand each stock's trend score and fundamental score, you can refer to the overview of how these two scores are calculated.
+Applying these two screening algorithms, we have selected the following stocks, listed as "Ticker: (Trend Score, Fundamental Score, Final Score)":INTU : (80.96, 60.16666666666667, 70.6), NVDA : (68.55, 69.32380952380953, 68.9), IDXX : (76.87, 60.4921568627451, 68.7), APH : (80.59, 54.3169440546817, 67.5), GE : (77.09, 57.875, 67.5), MSFT : (78.76, 55.79749505777356, 67.3), HWM : (73.84, 60.59305555555556, 67.2), ULTA : (78.56, 53.90141260211903, 66.2), NEM : (71.03, 59.38267523117399, 65.2), KLAC : (75.96, 53.88846515318296, 64.9), NFLX : (69.27, 60.53185823930151, 64.9), META : (65.7, 62.4270698920802, 64.1), MA : (66.85, 59.27271133635813, 63.1), RMD : (64.82, 61.24901960784313, 63.0), TEL : (70.94, 52.67881280387321, 61.8), CTAS : (65.15, 58.47373786712579, 61.8), PLTR : (69.45, 53.7025641025641, 61.6), V : (65.38, 56.66074070361164, 61.0), DASH : (66.19, 54.57242998809394, 60.4), MNST : (58.95, 59.32245180363024, 59.1), TT : (62.36, 54.45433477188041, 58.4), FAST : (61.38, 54.60710172024616, 58.0), ROL : (61.5, 53.88608174588665, 57.7), VRSK : (59.32, 52.64907811522774, 56.0). To better understand each stock's trend score and fundamental score, you can refer to the overview of how these two scores are calculated.
 
-My current portfolio includes the following holdings, displayed as "Ticker: (Cost Basis, Share Count, Latest price)": (MA:$570.00, 184, $585.60), (HWM:$168.85, 621, $169.89), (NVDA:$135.20, 1162, $135.13), (PAYC:$255.00, 403, $259.09), (UBER:$78.00, 826, $84.16), (NFLX:$1,078.00, 89, $1,207.23), (GE:$234.00, 447, $245.91), (APH:$82.00, 1186, $89.93), (MSFT:$455.00, 346, $460.36), (Cash: $30,390).
+My current portfolio includes the following holdings, displayed as "Ticker: (Cost Basis, Share Count, Latest price)": (V:$364.00, 323, $352.85), (KLAC:$825.00, 228, $867.67), (META:$703.00, 265, $682.87), (NVDA:$134.00, 1304, $141.97), (MSFT:$453.80, 393, $474.96), (GE:$232.20, 468, $236.60), (Cash: $104,624).
 
 
 Step 1 – Sentiment Analysis
-For each stock listed above—including both the screened selections and the current portfolio holdings—conduct a comprehensive search and analysis of all news articles and social media discussions (e.g., on X, formerly Twitter) published between 2025-05-17 and 2025-05-31.
+For each stock listed above—including both the screened selections and the current portfolio holdings—conduct a comprehensive search and analysis of all news articles and social media discussions (e.g., on X, formerly Twitter) published between 2025-05-31 and 2025-06-14.
 You can prioritize sentiment sources from official news outlets, X (formerly Twitter), earnings transcripts, and major financial news websites like Bloomberg, Reuters, CNBC, Wall street Journal and Seeking Alpha. You should focus on U.S.-based sentiment.
 	•	Evaluate sentiment (positive, negative, or neutral) and coverage volume for every ticker, accounting for industry-specific factors such as sector trends, regulatory changes, and supply-chain dynamics.
-	•	Integrate insights from the most recent earnings calls (up to 2025-05-31) to gauge management’s outlook on growth sustainability, revenue trajectories, and profitability, prioritizing stocks that exhibit consistent growth patterns and optimistic commentary suitable for a trend-based strategy.
+	•	Integrate insights from the most recent earnings calls (up to 2025-06-14) to gauge management’s outlook on growth sustainability, revenue trajectories, and profitability, prioritizing stocks that exhibit consistent growth patterns and optimistic commentary suitable for a trend-based strategy.
 	•	Assign each stock a sentiment score from 0 to 10 (10 = strongest positive sentiment and engagement; 0 = strongest negative).
 	•	Provide a concise summary of sentiment trends for each stock, highlighting key events, recurring phrases, and the ways macroeconomic or industry factors shape perceptions.
 
@@ -138,14 +138,14 @@ You can prioritize sentiment sources from official news outlets, X (formerly Twi
 
 Step 2 – Macroeconomic and Market Context
 
-Analyze recent macroeconomic variables—including U.S. monetary policy (Federal Reserve’s interest rate decisions, forward guidance), inflation trends, GDP growth, tariffs, and other relevant economic policies—based on information published between 2025-05-17 and 2025-05-31. Prioritize official sources (e.g., Federal Reserve statements, Bureau of Economic Analysis reports, U.S. Treasury announcements) and major financial news websites (e.g., Bloomberg, Reuters, CNBC, WSJ).
+Analyze recent macroeconomic variables—including U.S. monetary policy (Federal Reserve’s interest rate decisions, forward guidance), inflation trends, GDP growth, tariffs, and other relevant economic policies—based on information published between 2025-05-31 and 2025-06-14. Prioritize official sources (e.g., Federal Reserve statements, Bureau of Economic Analysis reports, U.S. Treasury announcements) and major financial news websites (e.g., Bloomberg, Reuters, CNBC, WSJ).
 
 Examine contemporaneous trends in the S&P 500 and Nasdaq Composite indices within the same time frame. Clearly synthesize these findings into a concise summary outlining the current macroeconomic environment, market sentiment, and outlook, specifically highlighting how recent U.S. monetary policy and macroeconomic shifts could impact equity market conditions in the near term.
 
 
 
 Step 3 – Portfolio Adjustment and Rationale
-Based on the latest fundamental, sentiment, and technical analyses of both my existing holdings and the screened stock selections—together with the current macroeconomic climate and market conditions as of 2025-05-31—recommend adjustments to optimize my portfolio.
+Based on the latest fundamental, sentiment, and technical analyses of both my existing holdings and the screened stock selections—together with the current macroeconomic climate and market conditions as of 2025-06-14—recommend adjustments to optimize my portfolio.
 Specifically:
 * To help you make a more informed decision, I’ve listed the most recent market prices for each stock in my current portfolio. The format is: ‘Ticker: (Cost Basis, Share Count, Latest Price),’ where the last value indicates the latest available market price.
 * Construct an optimized portfolio by selecting stocks exclusively from the combined set of my current holdings and the screened stocks.
@@ -182,7 +182,7 @@ This format specifies the position size as a percentage of total capital, along 
 
 Requirements:
 
-You must fully complete all the specified analysis steps. Ensure that your investment recommendations align accurately with market dynamics and conditions as of `2025-05-31`, aiming to enhance overall portfolio performance.
+You must fully complete all the specified analysis steps. Ensure that your investment recommendations align accurately with market dynamics and conditions as of `2025-06-14`, aiming to enhance overall portfolio performance.
 
 
 Finally, prepare your complete and structured analysis report in Chinese, ensuring it is logically organized, clearly articulated, and readily actionable for investment decision-making purposes.
